@@ -1,0 +1,1649 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>PegaHorário Saúde — Agenda online para profissionais de saúde</title>
+  <meta name="description" content="Simplifique a agenda do seu consultório. Agendamento online para médicos, psicólogos, fisioterapeutas, nutricionistas e mais. Confirmação via WhatsApp, PIX integrado." />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet" />
+
+  <style>
+    /* ===== RESET & BASE ===== */
+    *, *::before, *::after {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    :root {
+      --green-50:  #f0fdf4;
+      --green-100: #dcfce7;
+      --green-200: #bbf7d0;
+      --green-400: #4ade80;
+      --green-500: #22c55e;
+      --green-600: #16a34a;
+      --green-700: #15803d;
+      --emerald-500: #10b981;
+      --emerald-600: #059669;
+      --emerald-700: #047857;
+      --blue-50:   #eff6ff;
+      --blue-500:  #3b82f6;
+      --blue-600:  #2563eb;
+      --orange:    #f97316;
+      --gray-50:   #f9fafb;
+      --gray-100:  #f3f4f6;
+      --gray-200:  #e5e7eb;
+      --gray-400:  #9ca3af;
+      --gray-500:  #6b7280;
+      --gray-600:  #4b5563;
+      --gray-700:  #374151;
+      --gray-800:  #1f2937;
+      --gray-900:  #111827;
+      --white:     #ffffff;
+
+      --radius-sm:  6px;
+      --radius-md:  12px;
+      --radius-lg:  20px;
+      --radius-xl:  32px;
+      --shadow-sm:  0 1px 3px rgba(0,0,0,.08), 0 1px 2px rgba(0,0,0,.06);
+      --shadow-md:  0 4px 16px rgba(0,0,0,.10);
+      --shadow-lg:  0 10px 40px rgba(0,0,0,.12);
+    }
+
+    html {
+      scroll-behavior: smooth;
+    }
+
+    body {
+      font-family: 'Inter', sans-serif;
+      color: var(--gray-800);
+      background: var(--white);
+      line-height: 1.6;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    img { display: block; max-width: 100%; }
+    a  { color: inherit; text-decoration: none; }
+
+    /* ===== UTILITIES ===== */
+    .container {
+      width: 100%;
+      max-width: 1120px;
+      margin: 0 auto;
+      padding: 0 24px;
+    }
+
+    .sr-only {
+      position: absolute;
+      width: 1px; height: 1px;
+      padding: 0; margin: -1px;
+      overflow: hidden; clip: rect(0,0,0,0);
+      white-space: nowrap; border-width: 0;
+    }
+
+    /* ===== ANIMATIONS ===== */
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(24px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; }
+      to   { opacity: 1; }
+    }
+
+    @keyframes pulse-ring {
+      0%   { transform: scale(1);    opacity: .6; }
+      100% { transform: scale(1.18); opacity: 0;  }
+    }
+
+    @keyframes float {
+      0%, 100% { transform: translateY(0); }
+      50%       { transform: translateY(-8px); }
+    }
+
+    @keyframes shimmer {
+      0%   { background-position: -200% center; }
+      100% { background-position:  200% center; }
+    }
+
+    .anim-fade-up {
+      animation: fadeUp .7s ease both;
+    }
+    .anim-fade-up-2 { animation: fadeUp .7s .15s ease both; }
+    .anim-fade-up-3 { animation: fadeUp .7s .30s ease both; }
+    .anim-fade-up-4 { animation: fadeUp .7s .45s ease both; }
+
+    /* ===== NAVBAR ===== */
+    .navbar {
+      position: fixed;
+      top: 0; left: 0; right: 0;
+      z-index: 100;
+      background: rgba(255,255,255,.92);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      border-bottom: 1px solid var(--gray-200);
+      transition: box-shadow .3s;
+    }
+
+    .navbar__inner {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      height: 64px;
+    }
+
+    .navbar__brand {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-weight: 700;
+      font-size: 1.1rem;
+      letter-spacing: -.3px;
+    }
+
+    .navbar__brand-icon {
+      width: 32px; height: 32px;
+      background: linear-gradient(135deg, var(--emerald-500), var(--emerald-700));
+      border-radius: 8px;
+      display: flex; align-items: center; justify-content: center;
+      color: white;
+      font-size: 1rem;
+      box-shadow: 0 2px 8px rgba(16,185,129,.4);
+    }
+
+    .navbar__brand-pega { color: var(--orange); }
+    .navbar__brand-horario { color: var(--emerald-600); }
+
+    .navbar__nav {
+      display: flex;
+      align-items: center;
+      gap: 32px;
+      list-style: none;
+    }
+
+    .navbar__nav a {
+      font-size: .9rem;
+      font-weight: 500;
+      color: var(--gray-600);
+      transition: color .2s;
+    }
+    .navbar__nav a:hover { color: var(--emerald-600); }
+
+    .navbar__cta {
+      background: linear-gradient(135deg, var(--emerald-500), var(--emerald-600));
+      color: white !important;
+      padding: 8px 20px;
+      border-radius: 8px;
+      font-size: .875rem !important;
+      font-weight: 600 !important;
+      box-shadow: 0 2px 8px rgba(16,185,129,.35);
+      transition: transform .2s, box-shadow .2s !important;
+    }
+    .navbar__cta:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 4px 16px rgba(16,185,129,.45) !important;
+      color: white !important;
+    }
+
+    @media (max-width: 768px) {
+      .navbar__nav { display: none; }
+    }
+
+    /* ===== HERO ===== */
+    .hero {
+      padding-top: 120px;
+      padding-bottom: 96px;
+      background: linear-gradient(160deg, var(--green-50) 0%, #ffffff 55%, var(--blue-50) 100%);
+      position: relative;
+      overflow: hidden;
+    }
+
+    /* decorative blobs */
+    .hero::before,
+    .hero::after {
+      content: '';
+      position: absolute;
+      border-radius: 50%;
+      pointer-events: none;
+    }
+    .hero::before {
+      width: 600px; height: 600px;
+      background: radial-gradient(circle, rgba(16,185,129,.12) 0%, transparent 70%);
+      top: -120px; right: -160px;
+    }
+    .hero::after {
+      width: 400px; height: 400px;
+      background: radial-gradient(circle, rgba(59,130,246,.08) 0%, transparent 70%);
+      bottom: -80px; left: -60px;
+    }
+
+    .hero__inner {
+      position: relative;
+      z-index: 1;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      align-items: center;
+      gap: 64px;
+    }
+
+    .hero__badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      background: var(--green-100);
+      color: var(--emerald-700);
+      border: 1px solid var(--green-200);
+      border-radius: 999px;
+      padding: 4px 14px;
+      font-size: .8rem;
+      font-weight: 600;
+      margin-bottom: 20px;
+      letter-spacing: .3px;
+    }
+
+    .hero__badge-dot {
+      width: 6px; height: 6px;
+      background: var(--emerald-500);
+      border-radius: 50%;
+      position: relative;
+    }
+    .hero__badge-dot::after {
+      content: '';
+      position: absolute;
+      inset: -3px;
+      border-radius: 50%;
+      background: var(--emerald-400);
+      opacity: .4;
+      animation: pulse-ring 1.5s ease-out infinite;
+    }
+
+    .hero__title {
+      font-size: clamp(2.2rem, 4vw, 3.2rem);
+      font-weight: 900;
+      line-height: 1.12;
+      letter-spacing: -1.5px;
+      color: var(--gray-900);
+      margin-bottom: 20px;
+    }
+
+    .hero__title em {
+      font-style: normal;
+      background: linear-gradient(135deg, var(--emerald-500), var(--blue-500));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    .hero__subtitle {
+      font-size: 1.1rem;
+      color: var(--gray-600);
+      line-height: 1.7;
+      margin-bottom: 36px;
+      max-width: 480px;
+    }
+
+    .hero__actions {
+      display: flex;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 16px;
+    }
+
+    .btn-primary {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      background: linear-gradient(135deg, var(--emerald-500), var(--emerald-600));
+      color: white;
+      font-weight: 700;
+      font-size: 1rem;
+      padding: 14px 28px;
+      border-radius: 12px;
+      box-shadow: 0 4px 20px rgba(16,185,129,.4);
+      transition: transform .2s, box-shadow .2s;
+      border: none;
+      cursor: pointer;
+    }
+    .btn-primary:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 28px rgba(16,185,129,.5);
+    }
+
+    .btn-ghost {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      color: var(--gray-700);
+      font-weight: 600;
+      font-size: .95rem;
+      padding: 14px 20px;
+      border-radius: 12px;
+      border: 1.5px solid var(--gray-200);
+      background: white;
+      transition: border-color .2s, background .2s;
+    }
+    .btn-ghost:hover {
+      border-color: var(--emerald-400);
+      background: var(--green-50);
+    }
+
+    .hero__trust {
+      margin-top: 40px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      flex-wrap: wrap;
+    }
+
+    .hero__trust-avatars {
+      display: flex;
+    }
+    .hero__trust-avatar {
+      width: 32px; height: 32px;
+      border-radius: 50%;
+      border: 2px solid white;
+      background: linear-gradient(135deg, var(--emerald-400), var(--blue-500));
+      display: flex; align-items: center; justify-content: center;
+      font-size: .7rem;
+      font-weight: 700;
+      color: white;
+      margin-left: -8px;
+    }
+    .hero__trust-avatar:first-child { margin-left: 0; }
+
+    .hero__trust-text {
+      font-size: .82rem;
+      color: var(--gray-500);
+    }
+    .hero__trust-text strong {
+      color: var(--gray-700);
+    }
+
+    /* ===== HERO VISUAL ===== */
+    .hero__visual {
+      position: relative;
+      display: flex;
+      justify-content: center;
+      animation: float 6s ease-in-out infinite;
+    }
+
+    .hero__card {
+      background: white;
+      border-radius: 24px;
+      box-shadow: var(--shadow-lg);
+      padding: 28px;
+      width: 100%;
+      max-width: 380px;
+      border: 1px solid var(--gray-100);
+    }
+
+    .hero__card-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 20px;
+    }
+
+    .hero__card-month {
+      font-weight: 700;
+      font-size: 1rem;
+      color: var(--gray-800);
+    }
+
+    .hero__card-today {
+      font-size: .75rem;
+      font-weight: 600;
+      background: var(--green-100);
+      color: var(--emerald-700);
+      padding: 3px 10px;
+      border-radius: 999px;
+    }
+
+    .hero__calendar-grid {
+      display: grid;
+      grid-template-columns: repeat(7, 1fr);
+      gap: 4px;
+      margin-bottom: 20px;
+    }
+
+    .cal-day-label {
+      font-size: .65rem;
+      font-weight: 600;
+      color: var(--gray-400);
+      text-align: center;
+      padding: 4px 0;
+      text-transform: uppercase;
+      letter-spacing: .5px;
+    }
+
+    .cal-day {
+      width: 32px; height: 32px;
+      border-radius: 8px;
+      display: flex; align-items: center; justify-content: center;
+      font-size: .78rem;
+      font-weight: 500;
+      color: var(--gray-700);
+      cursor: pointer;
+      transition: background .15s;
+      margin: 0 auto;
+    }
+
+    .cal-day:hover { background: var(--green-100); }
+    .cal-day--today {
+      background: linear-gradient(135deg, var(--emerald-500), var(--emerald-600));
+      color: white;
+      font-weight: 700;
+    }
+    .cal-day--has-appt {
+      background: var(--green-100);
+      color: var(--emerald-700);
+      font-weight: 600;
+    }
+    .cal-day--empty { opacity: 0; pointer-events: none; }
+
+    .hero__appointments {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .appt-item {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 10px 12px;
+      border-radius: 10px;
+      background: var(--gray-50);
+    }
+
+    .appt-dot {
+      width: 8px; height: 8px;
+      border-radius: 50%;
+      flex-shrink: 0;
+    }
+
+    .appt-info { flex: 1; min-width: 0; }
+    .appt-name {
+      font-size: .82rem;
+      font-weight: 600;
+      color: var(--gray-800);
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+    .appt-type {
+      font-size: .73rem;
+      color: var(--gray-500);
+    }
+    .appt-time {
+      font-size: .78rem;
+      font-weight: 700;
+      color: var(--gray-700);
+      flex-shrink: 0;
+    }
+
+    /* floating notification badge */
+    .hero__notif {
+      position: absolute;
+      top: -16px;
+      right: -20px;
+      background: white;
+      border-radius: 14px;
+      padding: 10px 14px;
+      box-shadow: var(--shadow-md);
+      border: 1px solid var(--gray-100);
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: .8rem;
+      font-weight: 600;
+      color: var(--gray-700);
+      white-space: nowrap;
+      animation: float 6s 2s ease-in-out infinite;
+    }
+
+    .notif-icon {
+      width: 28px; height: 28px;
+      background: linear-gradient(135deg, #25d366, #128c7e);
+      border-radius: 8px;
+      display: flex; align-items: center; justify-content: center;
+      font-size: .9rem;
+    }
+
+    .hero__stat {
+      position: absolute;
+      bottom: -12px;
+      left: -20px;
+      background: white;
+      border-radius: 14px;
+      padding: 10px 16px;
+      box-shadow: var(--shadow-md);
+      border: 1px solid var(--gray-100);
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      animation: float 6s 1s ease-in-out infinite;
+    }
+
+    .stat-num {
+      font-size: 1.3rem;
+      font-weight: 800;
+      color: var(--emerald-600);
+    }
+    .stat-label {
+      font-size: .75rem;
+      color: var(--gray-500);
+      line-height: 1.3;
+    }
+
+    @media (max-width: 900px) {
+      .hero__inner {
+        grid-template-columns: 1fr;
+        gap: 48px;
+      }
+      .hero__visual {
+        order: -1;
+      }
+      .hero__card { max-width: 340px; }
+      .hero__notif { top: -12px; right: -8px; }
+      .hero__stat  { bottom: -12px; left: -8px; }
+    }
+
+    @media (max-width: 480px) {
+      .hero { padding-top: 100px; padding-bottom: 64px; }
+      .hero__title { font-size: 2rem; }
+      .hero__visual { display: none; }
+    }
+
+    /* ===== SECTION WRAPPER ===== */
+    .section {
+      padding: 96px 0;
+    }
+
+    .section--alt {
+      background: var(--gray-50);
+    }
+
+    .section__label {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      font-size: .78rem;
+      font-weight: 700;
+      letter-spacing: 1.5px;
+      text-transform: uppercase;
+      color: var(--emerald-600);
+      margin-bottom: 12px;
+    }
+
+    .section__title {
+      font-size: clamp(1.8rem, 3vw, 2.6rem);
+      font-weight: 800;
+      letter-spacing: -.8px;
+      line-height: 1.2;
+      color: var(--gray-900);
+      margin-bottom: 16px;
+    }
+
+    .section__sub {
+      font-size: 1.05rem;
+      color: var(--gray-500);
+      line-height: 1.7;
+      max-width: 560px;
+    }
+
+    .section__head {
+      margin-bottom: 56px;
+    }
+
+    .section__head--center {
+      text-align: center;
+    }
+
+    .section__head--center .section__sub {
+      margin: 0 auto;
+    }
+
+    /* ===== BENEFICIOS ===== */
+    .benefits__grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+      gap: 24px;
+    }
+
+    .benefit-card {
+      background: white;
+      border: 1px solid var(--gray-200);
+      border-radius: var(--radius-lg);
+      padding: 32px 28px;
+      transition: transform .25s, box-shadow .25s, border-color .25s;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .benefit-card::before {
+      content: '';
+      position: absolute;
+      top: 0; left: 0; right: 0;
+      height: 3px;
+      background: linear-gradient(90deg, var(--emerald-500), var(--blue-500));
+      transform: scaleX(0);
+      transform-origin: left;
+      transition: transform .3s ease;
+    }
+
+    .benefit-card:hover {
+      transform: translateY(-4px);
+      box-shadow: var(--shadow-lg);
+      border-color: var(--green-200);
+    }
+
+    .benefit-card:hover::before {
+      transform: scaleX(1);
+    }
+
+    .benefit-icon {
+      width: 52px; height: 52px;
+      border-radius: 14px;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 1.5rem;
+      margin-bottom: 20px;
+    }
+
+    .benefit-icon--green  { background: var(--green-100);  }
+    .benefit-icon--blue   { background: var(--blue-50);    }
+    .benefit-icon--orange { background: #fff7ed;           }
+    .benefit-icon--purple { background: #f5f3ff;           }
+
+    .benefit-title {
+      font-size: 1.05rem;
+      font-weight: 700;
+      color: var(--gray-900);
+      margin-bottom: 8px;
+    }
+
+    .benefit-desc {
+      font-size: .9rem;
+      color: var(--gray-500);
+      line-height: 1.65;
+    }
+
+    /* ===== PARA QUEM ===== */
+    .paraquem {
+      background: linear-gradient(135deg, var(--gray-900) 0%, #0f2a1a 100%);
+      padding: 96px 0;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .paraquem::before {
+      content: '';
+      position: absolute;
+      width: 700px; height: 700px;
+      border-radius: 50%;
+      background: radial-gradient(circle, rgba(16,185,129,.15) 0%, transparent 65%);
+      top: -200px; right: -200px;
+      pointer-events: none;
+    }
+
+    .paraquem .section__label {
+      color: var(--emerald-400);
+    }
+
+    .paraquem .section__title {
+      color: white;
+    }
+
+    .paraquem .section__sub {
+      color: rgba(255,255,255,.6);
+    }
+
+    .professions__grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+      gap: 16px;
+    }
+
+    .profession-card {
+      background: rgba(255,255,255,.06);
+      border: 1px solid rgba(255,255,255,.1);
+      border-radius: var(--radius-md);
+      padding: 24px 20px;
+      display: flex;
+      flex-direction: column;
+      align-items: flex-start;
+      gap: 10px;
+      transition: background .2s, border-color .2s, transform .2s;
+      cursor: default;
+    }
+
+    .profession-card:hover {
+      background: rgba(16,185,129,.12);
+      border-color: rgba(16,185,129,.4);
+      transform: translateY(-3px);
+    }
+
+    .profession-icon {
+      font-size: 2rem;
+      line-height: 1;
+    }
+
+    .profession-name {
+      font-size: .95rem;
+      font-weight: 600;
+      color: white;
+    }
+
+    .profession-detail {
+      font-size: .8rem;
+      color: rgba(255,255,255,.5);
+      line-height: 1.4;
+    }
+
+    /* ===== COMO FUNCIONA ===== */
+    .steps {
+      display: flex;
+      flex-direction: column;
+      gap: 0;
+      max-width: 780px;
+      margin: 0 auto;
+      position: relative;
+    }
+
+    .steps::before {
+      content: '';
+      position: absolute;
+      left: 27px;
+      top: 52px;
+      bottom: 52px;
+      width: 2px;
+      background: linear-gradient(to bottom, var(--emerald-500), var(--blue-500));
+    }
+
+    .step {
+      display: flex;
+      gap: 28px;
+      padding: 28px 0;
+      align-items: flex-start;
+      position: relative;
+    }
+
+    .step__num {
+      width: 56px; height: 56px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, var(--emerald-500), var(--emerald-700));
+      color: white;
+      font-size: 1.2rem;
+      font-weight: 800;
+      display: flex; align-items: center; justify-content: center;
+      flex-shrink: 0;
+      box-shadow: 0 0 0 6px white, 0 0 0 7px var(--green-200);
+      z-index: 1;
+    }
+
+    .step__content {
+      padding-top: 10px;
+    }
+
+    .step__title {
+      font-size: 1.2rem;
+      font-weight: 700;
+      color: var(--gray-900);
+      margin-bottom: 8px;
+    }
+
+    .step__desc {
+      font-size: .95rem;
+      color: var(--gray-500);
+      line-height: 1.65;
+    }
+
+    .step__tag {
+      display: inline-block;
+      margin-top: 10px;
+      font-size: .75rem;
+      font-weight: 600;
+      padding: 3px 10px;
+      border-radius: 999px;
+      background: var(--green-100);
+      color: var(--emerald-700);
+    }
+
+    /* ===== STATS STRIP ===== */
+    .stats-strip {
+      background: linear-gradient(135deg, var(--emerald-600), var(--emerald-700));
+      padding: 56px 0;
+    }
+
+    .stats-strip__grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+      gap: 32px;
+      text-align: center;
+    }
+
+    .stat-item__value {
+      font-size: 2.4rem;
+      font-weight: 900;
+      color: white;
+      line-height: 1;
+      margin-bottom: 6px;
+      letter-spacing: -1px;
+    }
+
+    .stat-item__label {
+      font-size: .85rem;
+      color: rgba(255,255,255,.75);
+      font-weight: 500;
+    }
+
+    /* ===== DEPOIMENTO ===== */
+    .testimonial-section {
+      padding: 96px 0;
+      background: var(--green-50);
+    }
+
+    .testimonials__grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 24px;
+      margin-top: 56px;
+    }
+
+    .testimonial-card {
+      background: white;
+      border: 1px solid var(--green-200);
+      border-radius: var(--radius-lg);
+      padding: 28px;
+      transition: box-shadow .2s;
+    }
+
+    .testimonial-card:hover {
+      box-shadow: var(--shadow-md);
+    }
+
+    .testimonial-stars {
+      color: #f59e0b;
+      font-size: 1rem;
+      margin-bottom: 12px;
+      letter-spacing: 2px;
+    }
+
+    .testimonial-text {
+      font-size: .95rem;
+      color: var(--gray-700);
+      line-height: 1.7;
+      font-style: italic;
+      margin-bottom: 20px;
+    }
+
+    .testimonial-author {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .testimonial-avatar {
+      width: 42px; height: 42px;
+      border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 1.1rem;
+      font-weight: 700;
+      color: white;
+    }
+
+    .testimonial-name {
+      font-weight: 700;
+      font-size: .9rem;
+      color: var(--gray-800);
+    }
+
+    .testimonial-role {
+      font-size: .8rem;
+      color: var(--gray-500);
+    }
+
+    /* ===== CTA FINAL ===== */
+    .cta-final {
+      padding: 100px 0;
+      background: white;
+      text-align: center;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .cta-final::before {
+      content: '';
+      position: absolute;
+      width: 800px; height: 800px;
+      border-radius: 50%;
+      background: radial-gradient(circle, rgba(16,185,129,.07) 0%, transparent 70%);
+      top: 50%; left: 50%;
+      transform: translate(-50%, -50%);
+    }
+
+    .cta-final__inner {
+      position: relative;
+      z-index: 1;
+      max-width: 640px;
+      margin: 0 auto;
+    }
+
+    .cta-final__badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      background: var(--green-100);
+      color: var(--emerald-700);
+      border-radius: 999px;
+      padding: 5px 14px;
+      font-size: .78rem;
+      font-weight: 700;
+      letter-spacing: .5px;
+      margin-bottom: 20px;
+    }
+
+    .cta-final__title {
+      font-size: clamp(2rem, 4vw, 3rem);
+      font-weight: 900;
+      letter-spacing: -1.5px;
+      line-height: 1.1;
+      color: var(--gray-900);
+      margin-bottom: 16px;
+    }
+
+    .cta-final__title em {
+      font-style: normal;
+      background: linear-gradient(135deg, var(--emerald-500), var(--blue-500));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    .cta-final__sub {
+      font-size: 1rem;
+      color: var(--gray-500);
+      line-height: 1.7;
+      margin-bottom: 36px;
+    }
+
+    .cta-final__actions {
+      display: flex;
+      justify-content: center;
+      flex-wrap: wrap;
+      gap: 16px;
+      margin-bottom: 28px;
+    }
+
+    .cta-final__disclaimer {
+      font-size: .82rem;
+      color: var(--gray-400);
+    }
+
+    .cta-final__disclaimer span {
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+    }
+
+    .cta-final__disclaimer span + span::before {
+      content: '·';
+      margin: 0 6px;
+      color: var(--gray-300);
+    }
+
+    /* ===== FOOTER ===== */
+    footer {
+      background: var(--gray-900);
+      padding: 56px 0 32px;
+      color: rgba(255,255,255,.6);
+    }
+
+    .footer__inner {
+      display: grid;
+      grid-template-columns: 2fr 1fr 1fr;
+      gap: 48px;
+      margin-bottom: 48px;
+    }
+
+    .footer__brand {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 16px;
+    }
+
+    .footer__brand-icon {
+      width: 36px; height: 36px;
+      background: linear-gradient(135deg, var(--emerald-500), var(--emerald-700));
+      border-radius: 10px;
+      display: flex; align-items: center; justify-content: center;
+      color: white;
+      font-size: 1.1rem;
+    }
+
+    .footer__brand-name {
+      font-size: 1.1rem;
+      font-weight: 700;
+      color: white;
+    }
+
+    .footer__brand-name .pega { color: var(--orange); }
+    .footer__brand-name .hor  { color: var(--emerald-400); }
+
+    .footer__desc {
+      font-size: .88rem;
+      line-height: 1.65;
+      max-width: 280px;
+      margin-bottom: 20px;
+    }
+
+    .footer__social {
+      display: flex;
+      gap: 10px;
+    }
+
+    .social-btn {
+      width: 34px; height: 34px;
+      background: rgba(255,255,255,.08);
+      border-radius: 8px;
+      display: flex; align-items: center; justify-content: center;
+      font-size: .9rem;
+      color: rgba(255,255,255,.7);
+      transition: background .2s;
+    }
+    .social-btn:hover { background: rgba(255,255,255,.15); }
+
+    .footer__heading {
+      font-size: .8rem;
+      font-weight: 700;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+      color: rgba(255,255,255,.4);
+      margin-bottom: 16px;
+    }
+
+    .footer__links {
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .footer__links a {
+      font-size: .88rem;
+      color: rgba(255,255,255,.6);
+      transition: color .2s;
+    }
+    .footer__links a:hover { color: var(--emerald-400); }
+
+    .footer__bottom {
+      border-top: 1px solid rgba(255,255,255,.08);
+      padding-top: 24px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 12px;
+    }
+
+    .footer__copy {
+      font-size: .82rem;
+      color: rgba(255,255,255,.35);
+    }
+
+    .footer__copy a {
+      color: var(--emerald-400);
+    }
+
+    .footer__legal {
+      display: flex;
+      gap: 24px;
+    }
+
+    .footer__legal a {
+      font-size: .82rem;
+      color: rgba(255,255,255,.35);
+      transition: color .2s;
+    }
+    .footer__legal a:hover { color: rgba(255,255,255,.6); }
+
+    @media (max-width: 768px) {
+      .footer__inner {
+        grid-template-columns: 1fr;
+        gap: 32px;
+      }
+      .footer__bottom {
+        flex-direction: column;
+        align-items: flex-start;
+      }
+    }
+
+    /* ===== SCROLL FADE IN ===== */
+    .reveal {
+      opacity: 0;
+      transform: translateY(20px);
+      transition: opacity .6s ease, transform .6s ease;
+    }
+    .reveal.visible {
+      opacity: 1;
+      transform: none;
+    }
+  </style>
+</head>
+<body>
+
+<!-- ===== NAVBAR ===== -->
+<nav class="navbar" aria-label="Navegação principal">
+  <div class="container navbar__inner">
+    <a href="https://pegahorario.com.br" class="navbar__brand" aria-label="PegaHorário — Página inicial">
+      <div class="navbar__brand-icon" aria-hidden="true">&#128337;</div>
+      <span>
+        <span class="navbar__brand-pega">Pega</span><span class="navbar__brand-horario">Horário</span>
+      </span>
+    </a>
+
+    <ul class="navbar__nav" role="list">
+      <li><a href="#beneficios">Benefícios</a></li>
+      <li><a href="#para-quem">Para quem</a></li>
+      <li><a href="#como-funciona">Como funciona</a></li>
+      <li>
+        <a href="https://pegahorario.com.br" class="navbar__cta" aria-label="Criar conta gratuita no PegaHorário">
+          Comece grátis
+        </a>
+      </li>
+    </ul>
+  </div>
+</nav>
+
+<!-- ===== HERO ===== -->
+<section class="hero" aria-labelledby="hero-title">
+  <div class="container">
+    <div class="hero__inner">
+
+      <!-- texto -->
+      <div>
+        <div class="hero__badge anim-fade-up" aria-hidden="true">
+          <span class="hero__badge-dot"></span>
+          Plataforma de agendamento para saúde
+        </div>
+
+        <h1 id="hero-title" class="hero__title anim-fade-up-2">
+          Agenda online para<br />
+          <em>profissionais de saúde</em>
+        </h1>
+
+        <p class="hero__subtitle anim-fade-up-3">
+          Simplifique o dia a dia do seu consultório. Seus pacientes agendam online 24 horas, recebem confirmação automática pelo WhatsApp e você recebe pelo PIX — sem planilhas, sem ligações.
+        </p>
+
+        <div class="hero__actions anim-fade-up-4">
+          <a href="https://pegahorario.com.br" class="btn-primary" aria-label="Criar conta gratuita">
+            &#9889; Comece grátis
+          </a>
+          <a href="#como-funciona" class="btn-ghost" aria-label="Ver como funciona o PegaHorário">
+            &#9654;&#65039; Ver como funciona
+          </a>
+        </div>
+
+        <div class="hero__trust anim-fade-up-4" role="img" aria-label="Mais de 2 mil profissionais de saúde já usam o PegaHorário">
+          <div class="hero__trust-avatars" aria-hidden="true">
+            <div class="hero__trust-avatar">MD</div>
+            <div class="hero__trust-avatar" style="background:linear-gradient(135deg,#3b82f6,#1d4ed8)">PS</div>
+            <div class="hero__trust-avatar" style="background:linear-gradient(135deg,#8b5cf6,#6d28d9)">NU</div>
+            <div class="hero__trust-avatar" style="background:linear-gradient(135deg,#f97316,#ea580c)">FT</div>
+          </div>
+          <p class="hero__trust-text">
+            <strong>+2.000 profissionais</strong> já simplificaram sua agenda
+          </p>
+        </div>
+      </div>
+
+      <!-- visual / mock agenda -->
+      <div class="hero__visual" aria-hidden="true">
+
+        <!-- notification badge -->
+        <div class="hero__notif">
+          <div class="notif-icon">&#128172;</div>
+          Confirmação enviada!
+        </div>
+
+        <!-- stat badge -->
+        <div class="hero__stat">
+          <div>
+            <div class="stat-num">98%</div>
+            <div class="stat-label">redução de<br>faltas</div>
+          </div>
+        </div>
+
+        <!-- card agenda -->
+        <div class="hero__card">
+          <div class="hero__card-header">
+            <span class="hero__card-month">Abril 2026</span>
+            <span class="hero__card-today">Hoje</span>
+          </div>
+
+          <div class="hero__calendar-grid" role="grid" aria-label="Calendário de agendamentos">
+            <!-- labels -->
+            <div class="cal-day-label">D</div>
+            <div class="cal-day-label">S</div>
+            <div class="cal-day-label">T</div>
+            <div class="cal-day-label">Q</div>
+            <div class="cal-day-label">Q</div>
+            <div class="cal-day-label">S</div>
+            <div class="cal-day-label">S</div>
+
+            <!-- dias -->
+            <div class="cal-day cal-day--empty"></div>
+            <div class="cal-day">1</div>
+            <div class="cal-day">2</div>
+            <div class="cal-day">3</div>
+            <div class="cal-day">4</div>
+            <div class="cal-day">5</div>
+            <div class="cal-day">6</div>
+
+            <div class="cal-day">7</div>
+            <div class="cal-day cal-day--has-appt">8</div>
+            <div class="cal-day cal-day--has-appt">9</div>
+            <div class="cal-day">10</div>
+            <div class="cal-day cal-day--has-appt">11</div>
+            <div class="cal-day">12</div>
+            <div class="cal-day cal-day--today">13</div>
+
+            <div class="cal-day">14</div>
+            <div class="cal-day cal-day--has-appt">15</div>
+            <div class="cal-day">16</div>
+            <div class="cal-day cal-day--has-appt">17</div>
+            <div class="cal-day">18</div>
+            <div class="cal-day cal-day--has-appt">19</div>
+            <div class="cal-day">20</div>
+          </div>
+
+          <div class="hero__appointments" aria-label="Agendamentos de hoje">
+            <div class="appt-item">
+              <div class="appt-dot" style="background:#10b981"></div>
+              <div class="appt-info">
+                <div class="appt-name">Maria Oliveira</div>
+                <div class="appt-type">Consulta</div>
+              </div>
+              <div class="appt-time">09:00</div>
+            </div>
+            <div class="appt-item">
+              <div class="appt-dot" style="background:#3b82f6"></div>
+              <div class="appt-info">
+                <div class="appt-name">João Santos</div>
+                <div class="appt-type">Retorno</div>
+              </div>
+              <div class="appt-time">10:30</div>
+            </div>
+            <div class="appt-item">
+              <div class="appt-dot" style="background:#8b5cf6"></div>
+              <div class="appt-info">
+                <div class="appt-name">Ana Costa</div>
+                <div class="appt-type">Avaliação</div>
+              </div>
+              <div class="appt-time">14:00</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- ===== BENEFICIOS ===== -->
+<section class="section" id="beneficios" aria-labelledby="beneficios-title">
+  <div class="container">
+    <header class="section__head reveal">
+      <p class="section__label">&#10024; Vantagens</p>
+      <h2 id="beneficios-title" class="section__title">Tudo que seu consultório precisa</h2>
+      <p class="section__sub">Uma plataforma completa para profissionais de saúde gerenciarem seus atendimentos com mais eficiência e menos stress.</p>
+    </header>
+
+    <div class="benefits__grid">
+
+      <article class="benefit-card reveal">
+        <div class="benefit-icon benefit-icon--green" aria-hidden="true">&#128197;</div>
+        <h3 class="benefit-title">Agenda inteligente</h3>
+        <p class="benefit-desc">Seu paciente vê os horários disponíveis em tempo real e agenda em menos de 1 minuto, qualquer hora do dia, direto pelo celular.</p>
+      </article>
+
+      <article class="benefit-card reveal" style="transition-delay:.1s">
+        <div class="benefit-icon benefit-icon--green" aria-hidden="true">&#128172;</div>
+        <h3 class="benefit-title">Confirmação via WhatsApp</h3>
+        <p class="benefit-desc">Lembretes automáticos enviados 24h e 1h antes da consulta, reduzindo faltas em até 98% sem nenhum esforço da sua equipe.</p>
+      </article>
+
+      <article class="benefit-card reveal" style="transition-delay:.2s">
+        <div class="benefit-icon benefit-icon--blue" aria-hidden="true">&#128203;</div>
+        <h3 class="benefit-title">Prontuário integrado</h3>
+        <p class="benefit-desc">Registre evoluções, anamneses e documentos diretamente na plataforma. Histórico completo do paciente sempre à mão, com segurança.</p>
+      </article>
+
+      <article class="benefit-card reveal" style="transition-delay:.3s">
+        <div class="benefit-icon benefit-icon--orange" aria-hidden="true">&#128181;</div>
+        <h3 class="benefit-title">Pagamento online — PIX</h3>
+        <p class="benefit-desc">Receba antecipado pelo PIX no momento do agendamento, elimine a inadimplência e tenha controle financeiro total do seu consultório.</p>
+      </article>
+
+    </div>
+  </div>
+</section>
+
+<!-- ===== PARA QUEM ===== -->
+<section class="paraquem" id="para-quem" aria-labelledby="paraquem-title">
+  <div class="container">
+    <header class="section__head reveal">
+      <p class="section__label">&#127891; Profissionais</p>
+      <h2 id="paraquem-title" class="section__title">Feito para quem cuida de pessoas</h2>
+      <p class="section__sub">O PegaHorário foi pensado para os desafios específicos de cada área da saúde.</p>
+    </header>
+
+    <div class="professions__grid">
+
+      <div class="profession-card reveal">
+        <div class="profession-icon" aria-hidden="true">&#128084;</div>
+        <div class="profession-name">Médicos</div>
+        <div class="profession-detail">Clínica geral, especialistas, consultórios e clínicas</div>
+      </div>
+
+      <div class="profession-card reveal" style="transition-delay:.05s">
+        <div class="profession-icon" aria-hidden="true">&#129504;</div>
+        <div class="profession-name">Psicólogos</div>
+        <div class="profession-detail">Terapia individual, casal e grupo</div>
+      </div>
+
+      <div class="profession-card reveal" style="transition-delay:.1s">
+        <div class="profession-icon" aria-hidden="true">&#129408;</div>
+        <div class="profession-name">Fisioterapeutas</div>
+        <div class="profession-detail">Clínicas de reabilitação e atendimento domiciliar</div>
+      </div>
+
+      <div class="profession-card reveal" style="transition-delay:.15s">
+        <div class="profession-icon" aria-hidden="true">&#129370;</div>
+        <div class="profession-name">Nutricionistas</div>
+        <div class="profession-detail">Consultórios, academias e atendimento online</div>
+      </div>
+
+      <div class="profession-card reveal" style="transition-delay:.2s">
+        <div class="profession-icon" aria-hidden="true">&#129463;</div>
+        <div class="profession-name">Dentistas</div>
+        <div class="profession-detail">Consultórios e clínicas odontológicas</div>
+      </div>
+
+      <div class="profession-card reveal" style="transition-delay:.25s">
+        <div class="profession-icon" aria-hidden="true">&#127807;</div>
+        <div class="profession-name">Terapeutas</div>
+        <div class="profession-detail">Terapia holística, massagem e bem-estar</div>
+      </div>
+
+      <div class="profession-card reveal" style="transition-delay:.3s">
+        <div class="profession-icon" aria-hidden="true">&#128143;</div>
+        <div class="profession-name">Fonoaudiólogos</div>
+        <div class="profession-detail">Atendimento infantil e adulto</div>
+      </div>
+
+      <div class="profession-card reveal" style="transition-delay:.35s">
+        <div class="profession-icon" aria-hidden="true">&#9899;</div>
+        <div class="profession-name">Outros</div>
+        <div class="profession-detail">Qualquer profissional de saúde com agenda</div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- ===== COMO FUNCIONA ===== -->
+<section class="section section--alt" id="como-funciona" aria-labelledby="como-funciona-title">
+  <div class="container">
+    <header class="section__head section__head--center reveal">
+      <p class="section__label">&#128295; Configuração</p>
+      <h2 id="como-funciona-title" class="section__title">Pronto em menos de 10 minutos</h2>
+      <p class="section__sub">Sem instalar nada, sem precisar de TI. Basta criar sua conta e sua agenda já está no ar.</p>
+    </header>
+
+    <div class="steps" aria-label="Passos para começar a usar o PegaHorário">
+
+      <div class="step reveal">
+        <div class="step__num" aria-hidden="true">1</div>
+        <div class="step__content">
+          <h3 class="step__title">Cadastre seu consultório</h3>
+          <p class="step__desc">Crie sua conta gratuita, informe os dados do consultório ou clínica, adicione seus serviços e defina o valor de cada tipo de atendimento.</p>
+          <span class="step__tag">&#9989; Gratuito para começar</span>
+        </div>
+      </div>
+
+      <div class="step reveal">
+        <div class="step__num" aria-hidden="true">2</div>
+        <div class="step__content">
+          <h3 class="step__title">Configure seus horários</h3>
+          <p class="step__desc">Defina os dias e horários de atendimento, bloqueie férias, feriados e intervalos. O sistema respeita sua disponibilidade automaticamente.</p>
+          <span class="step__tag">&#128336; Flexível do seu jeito</span>
+        </div>
+      </div>
+
+      <div class="step reveal">
+        <div class="step__num" aria-hidden="true">3</div>
+        <div class="step__content">
+          <h3 class="step__title">Receba agendamentos</h3>
+          <p class="step__desc">Compartilhe seu link personalizado no WhatsApp, Instagram ou site. Seus pacientes agendam, pagam e recebem a confirmação — tudo automático.</p>
+          <span class="step__tag">&#128640; Sua agenda no piloto automático</span>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- ===== STATS ===== -->
+<section class="stats-strip" aria-label="Números do PegaHorário">
+  <div class="container">
+    <div class="stats-strip__grid">
+
+      <div class="reveal" style="text-align:center">
+        <div class="stat-item__value">+2.000</div>
+        <div class="stat-item__label">Profissionais ativos</div>
+      </div>
+
+      <div class="reveal" style="text-align:center;transition-delay:.1s">
+        <div class="stat-item__value">+180 mil</div>
+        <div class="stat-item__label">Agendamentos realizados</div>
+      </div>
+
+      <div class="reveal" style="text-align:center;transition-delay:.2s">
+        <div class="stat-item__value">98%</div>
+        <div class="stat-item__label">Redução de faltas</div>
+      </div>
+
+      <div class="reveal" style="text-align:center;transition-delay:.3s">
+        <div class="stat-item__value">4.9 &#11088;</div>
+        <div class="stat-item__label">Avaliação dos usuários</div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- ===== DEPOIMENTOS ===== -->
+<section class="testimonial-section" aria-labelledby="depoimentos-title">
+  <div class="container">
+    <header class="section__head section__head--center reveal">
+      <p class="section__label">&#128172; Depoimentos</p>
+      <h2 id="depoimentos-title" class="section__title">O que os profissionais dizem</h2>
+    </header>
+
+    <div class="testimonials__grid">
+
+      <article class="testimonial-card reveal">
+        <div class="testimonial-stars" aria-label="5 estrelas">&#11088;&#11088;&#11088;&#11088;&#11088;</div>
+        <blockquote class="testimonial-text">
+          "Reduzi as faltas de consulta em quase 100%. Os lembretes automáticos pelo WhatsApp fizeram toda a diferença. Economizo horas por semana que antes gastava ligando para confirmar horários."
+        </blockquote>
+        <footer class="testimonial-author">
+          <div class="testimonial-avatar" style="background:linear-gradient(135deg,#10b981,#047857)" aria-hidden="true">DS</div>
+          <div>
+            <div class="testimonial-name">Dra. Sabrina Lima</div>
+            <div class="testimonial-role">Psicóloga — São Paulo, SP</div>
+          </div>
+        </footer>
+      </article>
+
+      <article class="testimonial-card reveal" style="transition-delay:.12s">
+        <div class="testimonial-stars" aria-label="5 estrelas">&#11088;&#11088;&#11088;&#11088;&#11088;</div>
+        <blockquote class="testimonial-text">
+          "Antes eu anotava tudo no papel e ainda perdia agendamentos. Com o PegaHorário, em 15 minutos minha agenda estava no ar. Meus pacientes adoraram poder marcar à meia-noite."
+        </blockquote>
+        <footer class="testimonial-author">
+          <div class="testimonial-avatar" style="background:linear-gradient(135deg,#3b82f6,#1d4ed8)" aria-hidden="true">RC</div>
+          <div>
+            <div class="testimonial-name">Dr. Rafael Campos</div>
+            <div class="testimonial-role">Fisioterapeuta — Campinas, SP</div>
+          </div>
+        </footer>
+      </article>
+
+      <article class="testimonial-card reveal" style="transition-delay:.24s">
+        <div class="testimonial-stars" aria-label="5 estrelas">&#11088;&#11088;&#11088;&#11088;&#11088;</div>
+        <blockquote class="testimonial-text">
+          "O pagamento antecipado pelo PIX resolveu meu maior problema: inadimplência. Hoje recebo antes da consulta e foco 100% no atendimento. Não consigo mais imaginar trabalhar sem o PegaHorário."
+        </blockquote>
+        <footer class="testimonial-author">
+          <div class="testimonial-avatar" style="background:linear-gradient(135deg,#8b5cf6,#6d28d9)" aria-hidden="true">AM</div>
+          <div>
+            <div class="testimonial-name">Dra. Aline Moreira</div>
+            <div class="testimonial-role">Nutricionista — Rio de Janeiro, RJ</div>
+          </div>
+        </footer>
+      </article>
+
+    </div>
+  </div>
+</section>
+
+<!-- ===== CTA FINAL ===== -->
+<section class="cta-final" aria-labelledby="cta-title">
+  <div class="container">
+    <div class="cta-final__inner">
+      <div class="cta-final__badge reveal" aria-hidden="true">
+        &#127881; Sem cartão de crédito
+      </div>
+      <h2 id="cta-title" class="cta-final__title reveal">
+        Simplifique sua<br /><em>agenda hoje mesmo</em>
+      </h2>
+      <p class="cta-final__sub reveal">
+        Crie sua conta gratuita em menos de 2 minutos e comece a receber agendamentos ainda hoje. Sem taxa de setup, sem contrato.
+      </p>
+      <div class="cta-final__actions reveal">
+        <a href="https://pegahorario.com.br" class="btn-primary" aria-label="Criar conta gratuita no PegaHorário">
+          &#9889; Criar conta grátis
+        </a>
+        <a href="https://pegahorario.com.br" class="btn-ghost" aria-label="Falar com nossa equipe pelo WhatsApp">
+          &#128172; Falar com a equipe
+        </a>
+      </div>
+      <p class="cta-final__disclaimer reveal">
+        <span>&#128274; Dados seguros</span>
+        <span>&#9989; Grátis para começar</span>
+        <span>&#128336; Sem fidelidade</span>
+      </p>
+    </div>
+  </div>
+</section>
+
+<!-- ===== FOOTER ===== -->
+<footer role="contentinfo">
+  <div class="container">
+    <div class="footer__inner">
+
+      <!-- brand col -->
+      <div>
+        <div class="footer__brand">
+          <div class="footer__brand-icon" aria-hidden="true">&#128337;</div>
+          <span class="footer__brand-name">
+            <span class="pega">Pega</span><span class="hor">Horário</span>
+          </span>
+        </div>
+        <p class="footer__desc">
+          A plataforma de agendamento online feita para profissionais de saúde que querem crescer sem complicação.
+        </p>
+        <div class="footer__social" aria-label="Redes sociais do PegaHorário">
+          <a href="https://instagram.com/pegahorario" class="social-btn" aria-label="Instagram PegaHorário" target="_blank" rel="noopener">&#128247;</a>
+          <a href="https://wa.me/5511999999999" class="social-btn" aria-label="WhatsApp PegaHorário" target="_blank" rel="noopener">&#128172;</a>
+          <a href="https://linkedin.com" class="social-btn" aria-label="LinkedIn PegaHorário" target="_blank" rel="noopener">&#128188;</a>
+        </div>
+      </div>
+
+      <!-- produto col -->
+      <nav aria-label="Links do produto">
+        <h3 class="footer__heading">Produto</h3>
+        <ul class="footer__links" role="list">
+          <li><a href="https://pegahorario.com.br">Página inicial</a></li>
+          <li><a href="https://pegahorario.com.br">Funcionalidades</a></li>
+          <li><a href="https://pegahorario.com.br">Planos e preços</a></li>
+          <li><a href="https://pegahorario.com.br">Criar conta grátis</a></li>
+        </ul>
+      </nav>
+
+      <!-- segmentos col -->
+      <nav aria-label="Segmentos de profissionais">
+        <h3 class="footer__heading">Para profissionais</h3>
+        <ul class="footer__links" role="list">
+          <li><a href="https://pegahorario.com.br">Médicos</a></li>
+          <li><a href="https://pegahorario.com.br">Psicólogos</a></li>
+          <li><a href="https://pegahorario.com.br">Fisioterapeutas</a></li>
+          <li><a href="https://pegahorario.com.br">Nutricionistas</a></li>
+          <li><a href="https://pegahorario.com.br">Dentistas</a></li>
+        </ul>
+      </nav>
+
+    </div>
+
+    <div class="footer__bottom">
+      <p class="footer__copy">
+        &copy; 2026 <a href="https://pegahorario.com.br">PegaHorário</a>. Todos os direitos reservados.
+      </p>
+      <nav class="footer__legal" aria-label="Links legais">
+        <a href="https://pegahorario.com.br">Privacidade</a>
+        <a href="https://pegahorario.com.br">Termos de uso</a>
+        <a href="https://pegahorario.com.br">LGPD</a>
+      </nav>
+    </div>
+  </div>
+</footer>
+
+<!-- ===== SCROLL REVEAL (vanilla JS, sem framework) ===== -->
+<script>
+  (function () {
+    'use strict';
+
+    var observer = new IntersectionObserver(function (entries) {
+      entries.forEach(function (entry) {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('visible');
+          observer.unobserve(entry.target);
+        }
+      });
+    }, { threshold: 0.12 });
+
+    document.querySelectorAll('.reveal').forEach(function (el) {
+      observer.observe(el);
+    });
+
+    /* navbar shadow on scroll */
+    var navbar = document.querySelector('.navbar');
+    window.addEventListener('scroll', function () {
+      if (window.scrollY > 8) {
+        navbar.style.boxShadow = '0 2px 20px rgba(0,0,0,.08)';
+      } else {
+        navbar.style.boxShadow = 'none';
+      }
+    }, { passive: true });
+  })();
+</script>
+
+</body>
+</html>
